@@ -1,0 +1,18 @@
+.wrapper-editor{
+    position: relative;
+    height: 100%;
+}
+
+.wrapper-editor .btn-format {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 50;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.wrapper-editor:hover .btn-format {
+    opacity: 1.0;
+}

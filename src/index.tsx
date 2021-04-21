@@ -1,17 +1,38 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/iframe-has-title */
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import  CodeEditor  from './components/code-editor';
+import bundler from './bundler';
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+import 'bulmaswatch/superhero/bulmaswatch.min.css'
+import Preview from './components/preview';
+
+
+const App = () => {
+
+    const [input, setInput] = useState('');
+    const [code, setCode] = useState('');
+
+    const onSubmitClick = async () => {
+        const output = await bundler(input);
+        setCode(output);
+    };
+
+    return (
+        <div>
+            <CodeEditor 
+                initialvalue="const a = 1;"
+                onChange={(val: string) => setInput(val)}
+            />
+            {/* <textarea onChange={(e) => setInput(e.target.value)}></textarea> */}
+            <div>
+                <button onClick={onSubmitClick}>Submit</button>
+            </div>
+            <Preview code={code}/>
+        </div>
+    )
+}
+
+ReactDOM.render(<App />, document.querySelector('#root'));
+
