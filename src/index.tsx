@@ -1,36 +1,21 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 
-import  CodeEditor  from './components/code-editor';
-import bundler from './bundler';
+import { store } from './state';
+import CellList from './components/cell-list';
 
-import 'bulmaswatch/superhero/bulmaswatch.min.css'
-import Preview from './components/preview';
-
+import 'bulmaswatch/superhero/bulmaswatch.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const App = () => {
-
-    const [input, setInput] = useState('');
-    const [code, setCode] = useState('');
-
-    const onSubmitClick = async () => {
-        const output = await bundler(input);
-        setCode(output);
-    };
-
     return (
-        <div>
-            <CodeEditor 
-                initialvalue="const a = 1;"
-                onChange={(val: string) => setInput(val)}
-            />
-            {/* <textarea onChange={(e) => setInput(e.target.value)}></textarea> */}
+        <Provider store={store}>
             <div>
-                <button onClick={onSubmitClick}>Submit</button>
+                <CellList />
             </div>
-            <Preview code={code}/>
-        </div>
+        </Provider>
     )
 }
 

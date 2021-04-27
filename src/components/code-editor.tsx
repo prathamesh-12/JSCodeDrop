@@ -6,10 +6,11 @@ import './code-editor.css'
 
 interface CodeEditorProps {
     initialvalue: string;
-    onChange(value: string): void
+    onChange(value: string): void;
+    onCodeSubmit(): void
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ initialvalue, onChange }) => {
+const CodeEditor: React.FC<CodeEditorProps> = ({ initialvalue, onChange, onCodeSubmit }) => {
     const editorRef = useRef<any>();
     const onEditorDidMount: EditorDidMount = (getValue, monacoEditor) => {
         editorRef.current = monacoEditor;
@@ -33,6 +34,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialvalue, onChange }) => {
         editorRef.current.setValue(_formattedCode);
     }
 
+    const onCodeSubmitHanlder = () => {
+        onCodeSubmit();
+    }
+
+
+
     return (
         <div className="wrapper-editor">
             <button 
@@ -40,9 +47,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialvalue, onChange }) => {
                 onClick={onFormatClickHandler}>
                     Format
             </button>
+            <button 
+                className="button btn-run is-primary is-outlined"
+                onClick={onCodeSubmitHanlder}>
+                    Run Code
+            </button>
             <MonacoEditor 
                 editorDidMount={onEditorDidMount}
-                height="500px"
+                height="100%"
                 theme="dark"
                 language="javascript"
                 value={initialvalue}
