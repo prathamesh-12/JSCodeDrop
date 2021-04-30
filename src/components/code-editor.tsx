@@ -48,7 +48,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialvalue, onChange, onCodeS
                     Format
             </button>
             <button 
-                className="button btn-run is-primary is-outlined"
+                className="button btn-run is-success is-outlined"
                 onClick={onCodeSubmitHanlder}>
                     Run Code
             </button>

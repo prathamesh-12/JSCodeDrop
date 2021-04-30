@@ -5,7 +5,7 @@ import { fetchPlugin } from './plugins/fetch-plugin';
 let service: esBuild.Service;
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default async (code: string) => {
+export const bundler =  async (code: string) => {
     if(!service) {
         service =  await esBuild.startService({
             worker: true,
@@ -38,6 +38,5 @@ export default async (code: string) => {
         };
         
     }
-
-    
 };
+
