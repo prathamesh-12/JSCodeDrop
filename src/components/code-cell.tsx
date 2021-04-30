@@ -16,9 +16,54 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     const { updateCell, createBundle } = useActions();
     const bundler = usedTypedSelecor(state => state.bundler[cell.id]);
 
+    const cumulativeCode = usedTypedSelecor((state) => {
+            if(!state.cells) { return; }
+            const data = state.cells.data;
+            const order = state.cells.order;
+    
+            const fetchedCell = order.map((id: string) => data[id]);
+
+            const display = `
+                    import _React from 'react';
+                    import _ReactDOM from 'react-dom';
+
+                    var display = (value) => {
+                        const root = document.querySelector('#root');
+
+                        if (typeof value === 'object') {
+                            if (value.$$typeof && value.props) {
+                                _ReactDOM.render(value, root);
+                            } else {
+                                root.innerHTML = JSON.stringify(value);
+                            }
+                        } else {
+                            root.innerHTML = value;
+                        }
+                    };
+                    `;
+            const displayFuncNoop = 'var display = () => {}';
+
+            const cumulativeCellContent = [];
+
+            for(let iCell of fetchedCell) {
+                if(iCell.type === 'code') {
+                    if (iCell.id === cell.id) {
+                        cumulativeCellContent.push(display);
+                    } else {
+                        cumulativeCellContent.push(displayFuncNoop);
+                    }
+                    cumulativeCellContent.push(iCell.content);
+                }
+                if(iCell.id === cell.id) { break; }
+            }
+
+            return cumulativeCellContent;
+    }) || [];
+
     useEffect(() => {
         if(!bundler) {
-            createBundle(cell.id, cell.content);
+            createBundle(cell.id, cumulativeCode.join("\n"));
+            return;
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -27,7 +72,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
         //const result = await bundler(cell.content);
         //setCode(result.code);
         //setErr(result.error);
-        createBundle(cell.id, cell.content);
+        createBundle(cell.id, cumulativeCode.join("\n"));
     };
 
     return (

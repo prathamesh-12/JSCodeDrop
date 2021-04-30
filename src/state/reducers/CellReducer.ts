@@ -61,7 +61,8 @@ const reducer = produce((state: CellState = initialState, action: Action): CellS
             }
 
             return state;
-        default: return state;
+        default: 
+            return state;
     }
 });
 
